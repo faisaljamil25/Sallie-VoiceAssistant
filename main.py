@@ -7,13 +7,15 @@ import random
 from gtts import gTTS
 from time import ctime
 
+r = sr.Recognizer()
+
 
 def record_audio(ask=False):
-    r = sr.Recognizer()
     with sr.Microphone() as source:
         if ask:
             sallie_speak(ask)
             print(ask)
+        # Capture mic data
         audio = r.listen(source)
         voice_data = ''
         try:
@@ -32,6 +34,7 @@ def sallie_speak(audio_string):
     audio_file = 'audio-' + str(r) + '.mp3'
     tts.save(audio_file)
     playsound.playsound(audio_file)
+    print(audio_string)
     os.remove(audio_file)
 
 
@@ -42,8 +45,8 @@ def respond(voice_data):
     if 'what time is it' in voice_data:
         sallie_speak(ctime())
     if 'search' in voice_data:
-        search = record_audio('What do you want to search?')
-        url = 'https://www.google.com/search?q=' + search
+        search = record_audio('What do you want to search for?')
+        url = 'https://google.com/search?q=' + search
         webbrowser.get().open(url)
         sallie_speak('Here is what I found for ' + search + '...')
         print('Here is what I found for ' + search + '...')
@@ -54,6 +57,8 @@ def respond(voice_data):
         sallie_speak('Here is the location for ' + location)
         print('Here is the location for ' + location)
     if 'exit' in voice_data:
+        sallie_speak('Thank You')
+        print('Thank you!')
         exit()
 
 
